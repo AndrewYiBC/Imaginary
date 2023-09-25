@@ -20,11 +20,15 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float groundCheckRadius;
     [SerializeField] private LayerMask groundLayer;
 
+    // Scripts
+    private SkillPolar polar;
+
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        polar = GetComponent<SkillPolar>();
     }
 
     void Update()
@@ -54,7 +58,7 @@ public class PlayerControls : MonoBehaviour
     // Jump
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed && IsGrounded())
+        if (context.performed && IsGrounded() && !polar.IsInPolar())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }

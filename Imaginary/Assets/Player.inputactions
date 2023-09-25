@@ -24,6 +24,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Polar",
+                    "type": "Button",
+                    "id": "de2ea56e-2d7a-450a-a0f0-9d7e0ea722df",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "a417f35b-4890-4e6f-b76b-81c102299224",
@@ -271,6 +280,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b418037-0ba6-488b-8aef-e8b2f3c97883",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Polar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
