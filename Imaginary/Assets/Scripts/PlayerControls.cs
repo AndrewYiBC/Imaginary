@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 public class PlayerControls : MonoBehaviour
 {
     // Variables
+    // GameObjects
+    private GameObject playerObject;
+
     // Components
     private Rigidbody2D rb;
 
@@ -27,7 +30,8 @@ public class PlayerControls : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        playerObject = transform.parent.gameObject;
+        rb = playerObject.GetComponent<Rigidbody2D>();
         polar = GetComponent<SkillPolar>();
     }
 

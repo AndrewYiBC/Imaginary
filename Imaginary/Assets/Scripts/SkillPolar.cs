@@ -9,6 +9,9 @@ public class SkillPolar : MonoBehaviour
     private const float PI = Mathf.PI;
 
     // Variables
+    // GameObjects
+    private GameObject playerObject;
+
     // Components
     private Rigidbody2D rb;
     private LineRenderer lr1;
@@ -38,7 +41,8 @@ public class SkillPolar : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        playerObject = transform.parent.gameObject;
+        rb = playerObject.GetComponent<Rigidbody2D>();
         lr1 = lrPolar1GameObject.GetComponent<LineRenderer>();
         lr2 = lrPolar2GameObject.GetComponent<LineRenderer>();
         lr1.positionCount = 0;
@@ -49,7 +53,7 @@ public class SkillPolar : MonoBehaviour
     {
         if (isInPolar1)
         {
-            points1[1] = transform.position;
+            points1[1] = playerObject.transform.position;
             DrawLinePolar1();
             CalcPolarCoord1();
             MaxRadiusCheck();
@@ -73,7 +77,7 @@ public class SkillPolar : MonoBehaviour
                 isInPolar1 = true;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 lr1.positionCount = 2;
-                points1[0] = transform.position;
+                points1[0] = playerObject.transform.position;
             }
             else
             {
@@ -145,9 +149,9 @@ public class SkillPolar : MonoBehaviour
                 yield break;
             }
             polarAngle += angleIncrement;
-            Vector2 posOnUnitCirle = new Vector3(Mathf.Cos(polarAngle), Mathf.Sin(polarAngle), transform.position.z);
+            Vector2 posOnUnitCirle = new Vector3(Mathf.Cos(polarAngle), Mathf.Sin(polarAngle), playerObject.transform.position.z);
             Vector2 pos = origin + polarRadius * posOnUnitCirle;
-            transform.position = pos;
+            playerObject.transform.position = pos;
             if (counter <= maxCounter)
             {
                 points2.Add(pos);
@@ -195,11 +199,11 @@ public class SkillPolar : MonoBehaviour
         {
             if (polarRadiusSigned > maxRadius)
             {
-                transform.position = new Vector3(points1[0].x + maxRadius, transform.position.y, transform.position.z);
+                playerObject.transform.position = new Vector3(points1[0].x + maxRadius, playerObject.transform.position.y, playerObject.transform.position.z);
             }
             else if (polarRadiusSigned < -maxRadius)
             {
-                transform.position = new Vector3(points1[0].x - maxRadius, transform.position.y, transform.position.z);
+                playerObject.transform.position = new Vector3(points1[0].x - maxRadius, playerObject.transform.position.y, playerObject.transform.position.z);
             }
         }
     }
