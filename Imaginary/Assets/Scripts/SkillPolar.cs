@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class SkillPolar : MonoBehaviour
 {
@@ -11,12 +12,19 @@ public class SkillPolar : MonoBehaviour
     // Variables
     // GameObjects
     private GameObject playerObject;
+    [SerializeField] private GameObject textGroup;
+    [SerializeField] private GameObject textBaseRadius_Obj;
+    [SerializeField] private GameObject textExpSign_Obj;
+    [SerializeField] private GameObject textExpAngle_Obj;
 
     // Components and such
     private Transform pltf; // playerObject's transform
     private Rigidbody2D rb;
     private LineRenderer lr1;
     private LineRenderer lr2;
+
+    private TextMeshPro textBaseRadius;
+    private TextMeshPro textExpAngle;
 
     // Polar Skill
     private bool isInPolar1 = false;
@@ -45,10 +53,14 @@ public class SkillPolar : MonoBehaviour
         pltf = transform.parent;
         playerObject = pltf.gameObject;
         rb = playerObject.GetComponent<Rigidbody2D>();
+
         lr1 = lrPolar1GameObject.GetComponent<LineRenderer>();
         lr2 = lrPolar2GameObject.GetComponent<LineRenderer>();
         lr1.positionCount = 0;
         lr2.positionCount = 0;
+
+        textBaseRadius = textBaseRadius_Obj.GetComponent<TextMeshPro>();
+        textExpAngle = textExpAngle_Obj.GetComponent<TextMeshPro>();
     }
 
     void Update()
