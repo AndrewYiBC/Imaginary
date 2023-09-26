@@ -12,7 +12,8 @@ public class SkillPolar : MonoBehaviour
     // GameObjects
     private GameObject playerObject;
 
-    // Components
+    // Components and such
+    private Transform pltf; // playerObject's transform
     private Rigidbody2D rb;
     private LineRenderer lr1;
     private LineRenderer lr2;
@@ -41,7 +42,8 @@ public class SkillPolar : MonoBehaviour
 
     void Start()
     {
-        playerObject = transform.parent.gameObject;
+        pltf = transform.parent;
+        playerObject = pltf.gameObject;
         rb = playerObject.GetComponent<Rigidbody2D>();
         lr1 = lrPolar1GameObject.GetComponent<LineRenderer>();
         lr2 = lrPolar2GameObject.GetComponent<LineRenderer>();
@@ -53,7 +55,7 @@ public class SkillPolar : MonoBehaviour
     {
         if (isInPolar1)
         {
-            points1[1] = playerObject.transform.position;
+            points1[1] = pltf.position;
             DrawLinePolar1();
             CalcPolarCoord1();
             MaxRadiusCheck();
@@ -77,7 +79,7 @@ public class SkillPolar : MonoBehaviour
                 isInPolar1 = true;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 lr1.positionCount = 2;
-                points1[0] = playerObject.transform.position;
+                points1[0] = pltf.position;
             }
             else
             {
@@ -149,9 +151,9 @@ public class SkillPolar : MonoBehaviour
                 yield break;
             }
             polarAngle += angleIncrement;
-            Vector2 posOnUnitCirle = new Vector3(Mathf.Cos(polarAngle), Mathf.Sin(polarAngle), playerObject.transform.position.z);
+            Vector2 posOnUnitCirle = new Vector3(Mathf.Cos(polarAngle), Mathf.Sin(polarAngle), pltf.position.z);
             Vector2 pos = origin + polarRadius * posOnUnitCirle;
-            playerObject.transform.position = pos;
+            pltf.position = pos;
             if (counter <= maxCounter)
             {
                 points2.Add(pos);
@@ -199,11 +201,11 @@ public class SkillPolar : MonoBehaviour
         {
             if (polarRadiusSigned > maxRadius)
             {
-                playerObject.transform.position = new Vector3(points1[0].x + maxRadius, playerObject.transform.position.y, playerObject.transform.position.z);
+                pltf.position = new Vector3(points1[0].x + maxRadius, pltf.position.y, pltf.position.z);
             }
             else if (polarRadiusSigned < -maxRadius)
             {
-                playerObject.transform.position = new Vector3(points1[0].x - maxRadius, playerObject.transform.position.y, playerObject.transform.position.z);
+                pltf.position = new Vector3(points1[0].x - maxRadius, pltf.position.y, pltf.position.z);
             }
         }
     }
