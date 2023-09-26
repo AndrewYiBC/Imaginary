@@ -52,7 +52,7 @@ public class PlayerControls : MonoBehaviour
     // Movement
     public void Move(InputAction.CallbackContext context)
     {
-        moveInputHorizontal = context.ReadValue<Vector2>().x;
+        moveInputHorizontal = context.ReadValue<float>();
     }
 
     // Jump
