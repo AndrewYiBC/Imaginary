@@ -11,7 +11,7 @@ public class SkillPolar : MonoBehaviour
     private LineRenderer lr1;
     private LineRenderer lr2;
 
-    // Polar
+    // Polar Skill
     private bool isInPolar1 = false;
     private bool isInPolar2 = false;
 
@@ -22,6 +22,11 @@ public class SkillPolar : MonoBehaviour
 
     private float directionInput = 0;
     [SerializeField] private float maxRadius;
+
+    // Polar Coordinate
+    private float polarRadiusSigned = 0;
+    private float polarRadius = 0;
+    private float polarAnglePi = 0;   // In Pi radians
 
 
 
@@ -40,6 +45,7 @@ public class SkillPolar : MonoBehaviour
         {
             points1[1] = transform.position;
             DrawLinePolar1();
+            CalcPolarCoord1();
             MaxRadiusCheck();
         }
         else if (isInPolar2)
@@ -63,20 +69,10 @@ public class SkillPolar : MonoBehaviour
                 lr1.positionCount = 2;
                 points1[0] = transform.position;
             }
-            else if (isInPolar1)
-            {
-                // In Polar stage 1: exit Polar mode
-                isInPolar1 = false;
-                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                lr1.positionCount = 0;
-            }
             else
             {
-                // In Polar stage 2: exit Polar mode
-                isInPolar2 = false;
-                rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-                lr1.positionCount = 0;
-                lr2.positionCount = 0;
+                // In Polar mode: exit Polar mode and reset all Polar mode related stuff
+                ResetAll();
             }
         }
     }
@@ -113,17 +109,33 @@ public class SkillPolar : MonoBehaviour
         return isInPolar1 | isInPolar2;
     }
 
-    private void MaxRadiusCheck()
+    private void CalcPolarCoord1()
     {
         float x0 = points1[0].x;
         float x1 = points1[1].x;
-        if (x1 - x0 > maxRadius)
+        polarRadiusSigned = x1 - x0;
+        polarRadius = Mathf.Abs(polarRadiusSigned);
+        if (polarRadiusSigned >= 0f)
         {
-            transform.position = new Vector3(x0 + maxRadius, transform.position.y, transform.position.z);
+            polarAnglePi = 1f;
+        } else
+        {
+            polarAnglePi = -1f;
         }
-        else if (x1 - x0 < -maxRadius)
+    }
+
+    private void MaxRadiusCheck()
+    {
+        if (polarRadius > maxRadius)
         {
-            transform.position = new Vector3(x0 - maxRadius, transform.position.y, transform.position.z);
+            if (polarRadiusSigned > maxRadius)
+            {
+                transform.position = new Vector3(points1[0].x + maxRadius, transform.position.y, transform.position.z);
+            }
+            else if (polarRadiusSigned < -maxRadius)
+            {
+                transform.position = new Vector3(points1[0].x - maxRadius, transform.position.y, transform.position.z);
+            }
         }
     }
 
@@ -139,5 +151,16 @@ public class SkillPolar : MonoBehaviour
         {
             lr2.SetPosition(i, points2[i]);
         }
+    }
+
+    private void ResetAll()
+    {
+        isInPolar1 = false;
+        isInPolar2 = false;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        lr1.positionCount = 0;
+        lr2.positionCount = 0;
+        polarRadius = 0;
+        polarAnglePi = 0;
     }
 }
