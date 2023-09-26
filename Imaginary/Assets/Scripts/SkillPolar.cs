@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 
 public class SkillPolar : MonoBehaviour
 {
+    // Constants
+    private const float PI = Mathf.PI;
+
     // Variables
     // Components
     private Rigidbody2D rb;
@@ -18,15 +21,18 @@ public class SkillPolar : MonoBehaviour
     [SerializeField] private GameObject lrPolar1GameObject;
     [SerializeField] private GameObject lrPolar2GameObject;
     private Vector3[] points1 = new Vector3[2];
-    private Vector3[] points2;
+    private List<Vector3> points2 = new List<Vector3>();
 
     private float directionInput = 0;
     [SerializeField] private float maxRadius;
+    [SerializeField] private float minRadius;
 
     // Polar Coordinate
+    [SerializeField] private float periodPerRadius;
+    private float timeIncrementPerSecond = 60f;
     private float polarRadiusSigned = 0;
     private float polarRadius = 0;
-    private float polarAnglePi = 0;   // In Pi radians
+    private float polarAngle = 0;   // In radians
 
 
 
@@ -79,7 +85,7 @@ public class SkillPolar : MonoBehaviour
 
     public void PolarDirection(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && polarRadius > minRadius)
         {
             if (isInPolar1)
             {
@@ -87,6 +93,65 @@ public class SkillPolar : MonoBehaviour
                 isInPolar2 = true;
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 directionInput = context.ReadValue<float>();
+                
+                bool up = directionInput >= 0;
+                StartCoroutine(PolarRotate(up));
+            }
+        }
+    }
+
+
+
+    // Coroutines
+    IEnumerator PolarRotate(bool up)
+    {
+        // Increment polar angle by angleIncrement every timeIncrement
+        // so that the player rotates by 2 * Pi radians per period
+        // note that period / timeIncrement = number of angle increments per period
+
+        float timeIncrement = 1f / timeIncrementPerSecond;
+        float period = periodPerRadius * polarRadius;
+        float angleIncrement = 2f * PI * (timeIncrement / period);  // In radians
+
+        if (polarRadiusSigned >= 0)
+        {
+            polarAngle = 0f;
+            if (!up)
+            {
+                // clockwise
+                angleIncrement = -angleIncrement;
+            }
+        }
+        else
+        {
+            polarAngle = PI;
+            if (up)
+            {
+                // clockwise
+                angleIncrement = -angleIncrement;
+            }
+        }
+
+        int counter = 0;
+        int maxCounter = (int)(period * timeIncrementPerSecond + 1);
+        Vector2 origin = points1[0];
+        points2.Add(points1[1]);
+
+        while(true)
+        {
+            yield return new WaitForSeconds(timeIncrement);
+            if (!isInPolar2)
+            {
+                yield break;
+            }
+            polarAngle += angleIncrement;
+            Vector2 posOnUnitCirle = new Vector3(Mathf.Cos(polarAngle), Mathf.Sin(polarAngle), transform.position.z);
+            Vector2 pos = origin + polarRadius * posOnUnitCirle;
+            transform.position = pos;
+            if (counter <= maxCounter)
+            {
+                points2.Add(pos);
+                counter++;
             }
         }
     }
@@ -106,7 +171,7 @@ public class SkillPolar : MonoBehaviour
 
     public bool IsInPolar()
     {
-        return isInPolar1 | isInPolar2;
+        return isInPolar1 || isInPolar2;
     }
 
     private void CalcPolarCoord1()
@@ -117,10 +182,10 @@ public class SkillPolar : MonoBehaviour
         polarRadius = Mathf.Abs(polarRadiusSigned);
         if (polarRadiusSigned >= 0f)
         {
-            polarAnglePi = 1f;
+            polarAngle = 0f;
         } else
         {
-            polarAnglePi = -1f;
+            polarAngle = PI;
         }
     }
 
@@ -147,6 +212,7 @@ public class SkillPolar : MonoBehaviour
 
     private void DrawLinePolar2()
     {
+        lr2.positionCount = points2.Count;
         for (int i = 0; i < lr2.positionCount; i++)
         {
             lr2.SetPosition(i, points2[i]);
@@ -160,7 +226,9 @@ public class SkillPolar : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         lr1.positionCount = 0;
         lr2.positionCount = 0;
+        points2.Clear();
+        polarRadiusSigned = 0;
         polarRadius = 0;
-        polarAnglePi = 0;
+        polarAngle = 0;
     }
 }

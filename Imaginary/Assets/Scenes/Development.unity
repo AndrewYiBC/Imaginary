@@ -792,6 +792,8 @@ MonoBehaviour:
   lrPolar1GameObject: {fileID: 1409206661}
   lrPolar2GameObject: {fileID: 538119337}
   maxRadius: 8
+  minRadius: 1
+  periodPerRadius: 0.5
 --- !u!1 &1409206661
 GameObject:
   m_ObjectHideFlags: 0
