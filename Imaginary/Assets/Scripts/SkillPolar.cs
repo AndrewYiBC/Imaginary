@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -71,10 +71,12 @@ public class SkillPolar : MonoBehaviour
             DrawLinePolar1();
             CalcPolarCoord1();
             MaxRadiusCheck();
+            UpdatePolarText1();
         }
         else if (isInPolar2)
         {
             DrawLinePolar2();
+            UpdatePolarText2();
         }
     }
 
@@ -89,6 +91,8 @@ public class SkillPolar : MonoBehaviour
             {
                 // Not in Polar mode: enter Polar mode
                 isInPolar1 = true;
+                textGroup.SetActive(true);
+                textExpSign_Obj.SetActive(false);
                 rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 lr1.positionCount = 2;
                 points1[0] = pltf.position;
@@ -237,8 +241,29 @@ public class SkillPolar : MonoBehaviour
         }
     }
 
+    private void UpdatePolarText1()
+    {
+        textBaseRadius.text = polarRadius.ToString("F1");
+        if (polarRadiusSigned >= 0f)
+        {
+            textExpAngle.text = "0";
+        }
+        else
+        {
+            textExpAngle.text = "π";
+        }
+    }
+
+    private void UpdatePolarText2()
+    {
+        textBaseRadius.text = polarRadius.ToString("F1");
+        textExpAngle.text = Mathf.Abs(polarAngle).ToString("F1");
+        textExpSign_Obj.SetActive(polarAngle < 0);
+    }
+
     private void ResetAll()
     {
+        textGroup.SetActive(false);
         isInPolar1 = false;
         isInPolar2 = false;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
