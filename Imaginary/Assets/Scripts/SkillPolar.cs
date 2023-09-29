@@ -257,7 +257,7 @@ public class SkillPolar : MonoBehaviour
     private void UpdatePolarText2()
     {
         textBaseRadius.text = polarRadius.ToString("F1");
-        textExpAngle.text = Mathf.Abs(polarAngle).ToString("F1");
+        textExpAngle.text = Mathf.Abs(polarAngle / PI).ToString("F1") + "π";
         textExpSign_Obj.SetActive(polarAngle < 0);
     }
 
