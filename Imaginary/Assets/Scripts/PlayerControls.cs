@@ -19,9 +19,13 @@ public class PlayerControls : MonoBehaviour
 
     // Jump
     [SerializeField] private float jumpForce;
-    [SerializeField] private Transform groundCheckTransform;
+    [SerializeField] private Transform[] groundCheckTransforms;
     [SerializeField] private float groundCheckRadius;
     [SerializeField] private LayerMask groundLayer;
+
+    // Gravity
+    private bool isInPositiveHalf = true;
+    private int groundCheckTransformIndex = 0;
 
     // Scripts
     private SkillPolar polar;
@@ -37,7 +41,7 @@ public class PlayerControls : MonoBehaviour
 
     void Update()
     {
-        
+        GravityCheck();
     }
 
     void FixedUpdate()
@@ -66,7 +70,8 @@ public class PlayerControls : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
-        if (context.canceled && rb.velocity.y > 0f)
+        bool isRising = (isInPositiveHalf && rb.velocity.y > 0f) || (!isInPositiveHalf && rb.velocity.y < 0f);
+        if (context.canceled && isRising)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
@@ -87,7 +92,24 @@ public class PlayerControls : MonoBehaviour
     // Jump
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheckTransform.position, groundCheckRadius, groundLayer);
+        return Physics2D.OverlapCircle(groundCheckTransforms[groundCheckTransformIndex].position, groundCheckRadius, groundLayer);
+    }
+
+    // Gravity
+    private void GravityCheck()
+    {
+        if ((isInPositiveHalf && transform.position.y < 0) || (!isInPositiveHalf && transform.position.y > 0))
+        {
+            FlipGravity();
+        }
+    }
+
+    private void FlipGravity()
+    {
+        isInPositiveHalf = !isInPositiveHalf;
+        rb.gravityScale = -rb.gravityScale;
+        jumpForce = -jumpForce;
+        groundCheckTransformIndex = 1 - groundCheckTransformIndex;
     }
 
 }

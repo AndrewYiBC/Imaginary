@@ -267,6 +267,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &247850818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 247850819}
+  m_Layer: 0
+  m_Name: GroundCheckNegative
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &247850819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 247850818}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 547781979}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &270205675
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +616,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 547781979}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &538119339
 LineRenderer:
@@ -789,6 +820,7 @@ Transform:
   m_Children:
   - {fileID: 306149317}
   - {fileID: 1673190693}
+  - {fileID: 247850819}
   - {fileID: 1409206662}
   - {fileID: 538119338}
   m_Father: {fileID: 1204500592}
@@ -954,7 +986,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 12
   jumpForce: 15
-  groundCheckTransform: {fileID: 1673190693}
+  groundCheckTransforms:
+  - {fileID: 1673190693}
+  - {fileID: 247850819}
   groundCheckRadius: 0.15
   groundLayer:
     serializedVersion: 2
@@ -1413,7 +1447,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 547781979}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &1409206663
 LineRenderer:
@@ -1696,7 +1730,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673190693}
   m_Layer: 0
-  m_Name: GroundCheck
+  m_Name: GroundCheckPositive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
